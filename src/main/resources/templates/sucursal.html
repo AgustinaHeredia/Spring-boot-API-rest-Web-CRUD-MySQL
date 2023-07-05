@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sucursales</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <h1>Listado de Sucursales</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>País</th>
+                <th>Tipo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="sucursal : ${sucursales}">
+                <td th:text="${sucursal.pk_SucursalID}"></td>
+                <td th:text="${sucursal.nombreSucursal}"></td>
+                <td th:text="${sucursal.paisSucursal}"></td>
+                <td th:text="${sucursal.tipoSucursal}"></td>
+                <td>
+                    <a th:href="@{/sucursal/getOne/{id}(id=${sucursal.pk_SucursalID})}">Ver</a>
+                    <a th:href="@{/sucursal/update/{id}(id=${sucursal.pk_SucursalID})}">Editar</a>
+                    <a th:href="@{/sucursal/delete/{id}(id=${sucursal.pk_SucursalID})}">Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h2>Agregar Sucursal</h2>
+    <form th:action="@{/sucursal/add}" method="post">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+        <br>
+        <label for="pais">País:</label>
+        <input type="text" id="pais" name="pais" required>
+        <br>
+        <button type="submit">Agregar</button>
+    </form>
+    
+    <script src="path/to/js/jquery.min.js"></script>
+    <script src="path/to/js/bootstrap.min.js"></script>
+</body>
+</html>
