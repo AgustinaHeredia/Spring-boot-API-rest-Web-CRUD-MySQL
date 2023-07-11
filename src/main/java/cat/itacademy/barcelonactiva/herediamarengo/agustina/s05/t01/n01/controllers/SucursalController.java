@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,12 +27,22 @@ public class SucursalController {
         this.sucursalService = sucursalService;
     }
 
+    @PostMapping("/add")
+    public ResponseEntity<?> addSucursalForm(@ModelAttribute SucursalDTO sucursalDTO) {
+        sucursalService.addSucursal(sucursalDTO);
+        return ResponseEntity.ok("Sucursal añadida exitosamente");
+    }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateSucursal(@RequestBody SucursalDTO sucursalDTO) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateSucursal(@PathVariable Integer id, @RequestParam String nombre,
+            @RequestParam String pais) {
+        SucursalDTO sucursalDTO = sucursalService.getSucursal(id);
+        sucursalDTO.setNombreSucursal(nombre);
+        sucursalDTO.setPaisSucursal(pais);
         sucursalService.updateSucursal(sucursalDTO);
         return ResponseEntity.ok("Sucursal actualizada exitosamente");
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteSucursal(@PathVariable Integer id) {
@@ -55,62 +65,36 @@ public class SucursalController {
     @GetMapping(value = { "", "/" })
     public ModelAndView mostrarSucursales() {
         List<SucursalDTO> sucursales = sucursalService.getAllSucursales();
-        ModelAndView modelAndView = new ModelAndView("sucursal");
+        ModelAndView modelAndView = new ModelAndView("getAll");
         modelAndView.addObject("sucursales", sucursales);
         return modelAndView;
     }
 
     @GetMapping("/add")
-    public String mostrarFormularioAgregar() {
-        return "sucursal";
+    public ModelAndView mostrarFormularioAgregar() {
+        return new ModelAndView("add");
     }
-
-    @PostMapping("/addForm")
-    public ResponseEntity<?> addSucursalForm(@RequestParam String nombre, @RequestParam String pais) {
-        SucursalDTO sucursalDTO = new SucursalDTO();
-        sucursalDTO.setNombreSucursal(nombre);
-        sucursalDTO.setPaisSucursal(pais);
-        sucursalService.addSucursal(sucursalDTO);
-        return ResponseEntity.ok("Sucursal añadida exitosamente");
-    }
-
 
     @GetMapping("/update/{id}")
     public ModelAndView mostrarFormularioEditar(@PathVariable Integer id) {
         SucursalDTO sucursalDTO = sucursalService.getSucursal(id);
-        ModelAndView modelAndView = new ModelAndView("sucursal");
+        ModelAndView modelAndView = new ModelAndView("update");
         modelAndView.addObject("sucursal", sucursalDTO);
         return modelAndView;
-    }
-
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> actualizarSucursal(@PathVariable Integer id, @RequestParam String nombre,
-            @RequestParam String pais) {
-        SucursalDTO sucursalDTO = sucursalService.getSucursal(id);
-        sucursalDTO.setNombreSucursal(nombre);
-        sucursalDTO.setPaisSucursal(pais);
-        sucursalService.updateSucursal(sucursalDTO);
-        return ResponseEntity.ok("Sucursal actualizada exitosamente");
     }
 
     @GetMapping("/delete/{id}")
     public ModelAndView mostrarConfirmacionEliminar(@PathVariable Integer id) {
         SucursalDTO sucursalDTO = sucursalService.getSucursal(id);
-        ModelAndView modelAndView = new ModelAndView("sucursal");
+        ModelAndView modelAndView = new ModelAndView("delete");
         modelAndView.addObject("sucursal", sucursalDTO);
         return modelAndView;
-    }
-
-    @DeleteMapping("/deleteForm/{id}")
-    public ResponseEntity<?> deleteSucursalForm(@PathVariable Integer id) {
-        sucursalService.deleteSucursal(id);
-        return ResponseEntity.ok("Sucursal eliminada exitosamente");
     }
 
     @GetMapping("/getOneForm/{id}")
     public ModelAndView mostrarDetalleSucursalForm(@PathVariable Integer id) {
         SucursalDTO sucursalDTO = sucursalService.getSucursal(id);
-        ModelAndView modelAndView = new ModelAndView("sucursal");
+        ModelAndView modelAndView = new ModelAndView("getOne");
         modelAndView.addObject("sucursal", sucursalDTO);
         return modelAndView;
     }

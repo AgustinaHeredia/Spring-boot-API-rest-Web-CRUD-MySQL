@@ -62,10 +62,10 @@ public class SucursalService {
                 "Rumanía", "Suecia");
     }
 
-    public SucursalDTO addSucursal(SucursalDTO sucursalDTO) {
+    public void addSucursal(SucursalDTO sucursalDTO) {
         Sucursal sucursal = convertToEntity(sucursalDTO);
         Sucursal savedSucursal = sucursalRepository.save(sucursal);
-        return convertToDto(savedSucursal);
+        sucursalDTO.setPk_SucursalID(savedSucursal.getPk_SucursalID());
     }
 
     public SucursalDTO updateSucursal(SucursalDTO sucursalDTO) {

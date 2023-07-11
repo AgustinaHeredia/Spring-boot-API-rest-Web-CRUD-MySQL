@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Actualizar Sucursal</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Actualizar Sucursal</h1>
+    <form id="updateForm" th:action="@{/sucursal/update/{id}(id=${sucursal.pk_SucursalID})}" method="post">
+        <input type="hidden" name="id" th:value="${sucursal.pk_SucursalID}">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" th:value="${sucursal.nombreSucursal}" required><br>
+        <label for="pais">País:</label>
+        <input type="text" id="pais" name="pais" th:value="${sucursal.paisSucursal}" required><br>
+        <button type="button" onclick="updateSucursal()">Actualizar</button>
+    </form>
+
+    <script>
+        function updateSucursal() {
+            var form = document.getElementById("updateForm");
+            var id = form.elements["id"].value;
+            var nombre = form.elements["nombre"].value;
+            var pais = form.elements["pais"].value;
+            
+            $.ajax({
+                url: "/sucursal/update/" + id + "?nombre=" + nombre + "&pais=" + pais,
+                type: "PUT",
+                success: function(response) {
+                    alert("Sucursal actualizada exitosamente");
+                    window.location.href = "/sucursal/getAll";
+                },
+                error: function(xhr, status, error) {
+                    alert("Error al actualizar la sucursal: " + xhr.responseText);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
